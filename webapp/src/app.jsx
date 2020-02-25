@@ -23,6 +23,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { PostsView } from './views/posts.jsx';
 import { PostView } from './views/post.jsx';
 import { CreatePostModal } from "./views/createPost.jsx";
+import { Camera } from './views/camera.jsx'
 
 const GRAPHQL_ENDPOINT = `%s:%d/v1/graphql`;
 
@@ -101,6 +102,7 @@ class App extends React.Component {
                         <Route exact key="posts" path="/" component={PostsView} />
                         <ModalRoute component={CreatePostModal} path='/post/create' className='create-video-modal'/>
                         <Route key="post" path="/post/:id" component={PostView} />
+                        <Route key="camera" path="/camera" component={Camera} />
                         <ModalContainer />
                     </ApolloProvider>
                 </LastLocationProvider>
