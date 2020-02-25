@@ -4,16 +4,17 @@ const gql = require('graphql-tag')
 const { Mutation } = require('react-apollo')
 import { graphql } from 'react-apollo';
 import { Button, Input, Label, Modal, ModalHeader, ModalBody, ModalFooter, Table } from 'reactstrap';
+import { withLastLocation } from 'react-router-last-location';
 import 'react-router-modal/css/react-router-modal.css';
 
-const CREATE_POST = gql`
-    mutation create($title: String) {
-      postCreate(newPost: {title: $title}) {
-        post {
-          title
+const CREATE_COMMENT = gql`
+    mutation comment($body: String, $post: ID) {
+      commentCreate(newComment: {body: $body, post: $post}) {
+        comment {
+          body
         }
         ok
-        errors{
+        errors {
           field
           messages
         }
@@ -22,25 +23,25 @@ const CREATE_POST = gql`
 `;
 
 
-class CreatePostModal extends React.Component {
+class CreateCommentModal extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            title: ''
+            body: ''
         };
     }
 
     create() {
 
-        this.props.mutate({variables: {title: this.state.title}});
+        this.props.mutate({variables: {body: this.state.body, id: 28}});
         this.close();
     }
 
     close() {
 
-        const { history, match } = this.props;
-        history.push('/');
+        const { history, match, lastLocation } = this.props;
+        history.push((lastLocation && lastLocation.pathname) || '/');
     }
 
     render() {
@@ -51,10 +52,10 @@ class CreatePostModal extends React.Component {
                        container={this}
                        toggle={() => this.close()}
                        className={this.props.className}>
-                    <ModalHeader toggle={() => this.close()}>Create Post</ModalHeader>
+                    <ModalHeader toggle={() => this.close()}>Create Comment</ModalHeader>
                     <ModalBody>
-                        <Label>Title</Label>
-                        <Input value={this.state.title} onChange={(e) => this.setState({title: e.target.value})}></Input>
+                        <Label>Body</Label>
+                        <Input value={this.state.body} onChange={(e) => this.setState({body: e.target.value})}></Input>
                     </ModalBody>
                     <ModalFooter>
                         <Button color="default" onClick={() => {this.create()}}>Create</Button>
@@ -66,5 +67,5 @@ class CreatePostModal extends React.Component {
     }
 }
 
-const CreatePostModalGraphQL = graphql(CREATE_POST, {})(CreatePostModal);
-export { CreatePostModalGraphQL as CreatePostModal}
+const CreateCommentModalGraphQL = graphql(CREATE_COMMENT, {})(withLastLocation(CreateCommentModal));
+export { CreateCommentModalGraphQL as CreateCommentModal }
